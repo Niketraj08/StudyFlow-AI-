@@ -1,0 +1,30 @@
+# Snippet to paste into android/app/build.gradle AFTER `npx cap add android`.
+# See ANDROID_BUILD.md for exact placement.
+
+# 1. Above `android { ... }` block, add:
+#
+# def keystorePropertiesFile = rootProject.file("keystore.properties")
+# def keystoreProperties = new Properties()
+# if (keystorePropertiesFile.exists()) {
+#     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+# }
+
+# 2. INSIDE the `android { ... }` block, add signingConfigs + update buildTypes:
+#
+# signingConfigs {
+#     release {
+#         if (keystorePropertiesFile.exists()) {
+#             keyAlias keystoreProperties['keyAlias']
+#             keyPassword keystoreProperties['keyPassword']
+#             storeFile file(keystoreProperties['storeFile'])
+#             storePassword keystoreProperties['storePassword']
+#         }
+#     }
+# }
+# buildTypes {
+#     release {
+#         minifyEnabled false
+#         proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+#         signingConfig signingConfigs.release
+#     }
+# }
